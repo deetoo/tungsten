@@ -1,7 +1,9 @@
 #!/bin/bash
 
-VER="0.01"
-DEBUG="1"
+VER="0.03"
+
+# uncomment next line for DEBUG info.
+# DEBUG="1"
 
 function Preamble {
 clear
@@ -56,21 +58,24 @@ esac
 Preamble
 echo ""
 echo ""
-printf "Enter Service Name: "
+echo "-- A 'Service Name' is a label given to this replication environment."
+echo "-- You can use any service name, an example might be 'standard'"
+echo "--"
+printf "--- Enter Service Name: "
 read -r MyServiceName
 
 GetTopology
 
 # Get the Masters hostname:
-printf 'Enter the FQDN of the Master Server: '
+printf '--- Enter the FQDN of the Master Server: '
 read -r MyMasterHost
 
 # Get the Replication username, typically 'tungsten'
-printf 'Enter the replication username (ex: tungsten): '
+printf '--- Enter the replication username (ex: tungsten): '
 read -r MyRepUser
 
 # Get the RepUser password
-printf 'Enter the password for %s: ' "$MyRepUser"
+printf '--- Enter the password for %s: ' "$MyRepUser"
 read -r MyRepUserPassword
 
 
@@ -85,17 +90,17 @@ if [[ $CMD  = "mysql" ]]
         fi
 
 # Get the  installation directory
-printf 'Enter the directory to install Tungsten to: '
+printf '--- Enter the directory to install Tungsten to (ex: /opt/continuent): '
 read -r MyInstallDir
 
-printf  'Enter a comma delimited list of all servers in this replication environment: '
+printf  '--- Enter a comma delimited list of all servers in this replication environment (ex: vmd01,vmd02): '
 read -r  MyRepMembers
 
 if [ "$DEBUG" ]
         then
                 echo "DEBUG INFO"
                 echo "-----------------------------------------------"
-                echo "Service: Name: $MyRepService"
+                echo "Service: Name: $MyService"
                 echo "Topology: $MyTopology"
                 echo "Master Host: $MyMasterHost"
                 echo "Replication User: $MyRepUser"
@@ -105,12 +110,15 @@ if [ "$DEBUG" ]
                 echo "-----------------------------------------------"
 
                 echo "Command to be executed:"
-                echo "/opt/tungsten/bin/tpm install $MyRepService --topology=$MyTopology --master=$MyMasterHost --replication-user=$MyRepUser --replication-password=$MyRepUserPassword --install-dir=$MyInstallDir --members=$MyRepMembers --start"
+                echo "/opt/tungsten/bin/tpm install $MyService --topology=$MyTopology --master=$MyMasterHost --replication-user=$MyRepUser --replication-password=$MyRepUserPassword --install-directory=$MyInstallDir --members=$MyRepMembers --start"
         fi
 
 
-echo "Tungsten is now ready to install.."
+echo "--- Tungsten is now ready to install.."
 echo "Press [ENTER] to proceed, press [CTRL-C] to abort."
 read LASTCHANCE
-/opt/tungsten/bin/tpm install $MyRepService --topology=$MyTopology --master=$MyMasterHost --replication-user=$MyRepUser --replication-password=$MyRepUserPassword --install-dir=$MyInstallDir --members=$MyRepMembers --start
+
+# need a check to see if tpm exists, and if /opt/tungsten/bin is in the users
+# PATH
+/opt/tungsten/bin/tpm install $MyService --topology=$MyTopology --master=$MyMasterHost --replication-user=$MyRepUser --replication-password=$MyRepUserPassword --install-directory=$MyInstallDir --members=$MyRepMembers --start
 
