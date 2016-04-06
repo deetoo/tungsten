@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VER="0.03"
+VER="0.04"
 
 # uncomment next line for DEBUG info.
 # DEBUG="1"
@@ -71,6 +71,7 @@ printf '--- Enter the FQDN of the Master Server: '
 read -r MyMasterHost
 
 # Get the Replication username, typically 'tungsten'
+printf '*NOTE* This user must already exist in MySQL.'
 printf '--- Enter the replication username (ex: tungsten): '
 read -r MyRepUser
 
