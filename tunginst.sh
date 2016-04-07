@@ -51,6 +51,13 @@ esac
 
 
 
+# need to be root.
+if [ $UID -ne "0" ]
+        then
+        echo "You must be root to install this."
+        exit 127
+fi
+
 # --------
 # start running stuff..
 # show requirements
