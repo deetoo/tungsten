@@ -3,12 +3,13 @@ import sys
 import string
 import os
 import subprocess
-import MySQLdb
+# cant test MySQL connections without importing additional modules.
+#import MySQLdb
 
 
 # verify user is root.
-#if os.geteuid() != 0:
-#	exit("\n**ERROR**\nYou need to be the root user to execute this script.\n")
+if os.geteuid() != 0:
+	exit("\n**ERROR**\nYou need to be the root user to execute this script.\n")
 
 myVer = "0.04"
 
@@ -38,21 +39,7 @@ repUser = raw_input('Enter replication username: ')
 print("--- The replication user password will be used to verify MySQL connectivity..")
 repPass = raw_input('Enter replication user password: ')
 
-# test MySQL connection.
-try:
-	print("--- Testing MySQL connection..")
-	connString = "'localhostuser', '" + repUser + "', '"+ repPass + "'"
-	db = MySQLdb.connect( connString)
-	db.query("SELECT version()")
-	result = db.use_result()
-	print("Test Successful.")
-except MySQLdb.error, e:
-	print "ERROR: %d: %s" % (e.args[0], e.args[1]) 
-	sys.exit(1)
-finally:
-	if db:
-		db.close()
-	
+
 
 print("--- Choose the replication type below..")
 MasterSlave = raw_input('Will this be a Master->Slave environment? [Y/N]: ')
@@ -98,7 +85,7 @@ print("-----------------------------------")
 lastChance = raw_input("Proceed with installation? [Y/N]: ")
 if lastChance in ['y', 'Y']:
 	print("starting installation, this will take a bit of time..")
-	execString = "/opt/bin/tungsten/bin/tpm install " + serviceName + " --topology=" + Topology + " --master=" + FQDN + " --replication-user=" + repUser + " --replication-password=" + repPass + " --install-directory=" + installDir + " --members=" + serverList 
+	execString = "/opt/bin/tungsten/bin/tpm install " + serviceName + " --topology=" + Topology + " --master=" + FQDN + " --replication-user=" + repUser + " --replication-password=" + repPass + " --install-directory=" + installDir + " --members=" + serverList
 #	print( execString )
 	subprocess.call([ 'execString'])
 else:
